@@ -1,0 +1,9 @@
+SERVICE_NAME=newscache
+SOCK_TYPE=stream
+PROTOCOL=tcp
+PORT=119
+FLAGS=nowait
+USER=root
+SERVER=tcpd
+DAEMON=/usr/sbin/newschache
+DAEMONARGS="--daemon"
