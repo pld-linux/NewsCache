@@ -2,23 +2,19 @@ Summary:	News Cache
 Summary(pl):	nisza dla newsów 
 Name:		NewsCache
 Version:	1.1.92
-Release:	0
+Release:	1
 Epoch:		0
-License:	- (enter GPL/LGPL/BSD/BSD-like/other license name here)
-Group:		-
-######		Unknown group!
-#Vendor:		-
-#Icon:		-
+License:	GPL
+Group:		Applications/News
 Source0:	http://www.hstraub.at/linux/downloads/src/%{name}-%{version}.tar.gz 
 # Source0-md5:	8cd84c15429fbf70b9f24ab877387ab3
+Patch0:		%{name}-ac_no_debug_flag_hack.patch
 URL:		http://members.aon.at/hstraub/linux/newscache
 BuildRequires:	socket++-devel
-Requires:	socket++
-Provides:	nntpserver
-#Obsoletes:  leafnode+
-#Obsoletes:	leafnode
-#Conflicts:  inn
+BuildRequires:	libwrap-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_sysconfdir	/etc/%{name}
 
 %description
 NewsCache is a free cache server for USENET News. NewsCache acts to
@@ -33,12 +29,11 @@ jest widziany jako serwer nntp, ale przechowuje tylko te artyku³y o które choæ j
 NewsCache rozwi±zuje problemy takie jak zajmowanie pasma czy obci±¿enie IO... (NYF!!!)
 
 %prep
-%setup -q -n %{name}-%{version}
-#%patch0 -p1
+%setup -q 
+%patch0 -p0
 
 %build
-%{__gettextize}
-#%{__libtoolize} (?)
+%define specflags '-O0'
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
@@ -48,8 +43,6 @@ NewsCache rozwi±zuje problemy takie jak zajmowanie pasma czy obci±¿enie IO... (N
 
 %install
 rm -rf $RPM_BUILD_ROOT
-# create directories if necessary
-#install -d $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -57,16 +50,11 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre
-
-%post
-
-%preun
-
-%postun
-
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS CREDITS ChangeLog NEWS README THANKS TODO
+%doc AUTHORS ChangeLog NEWS README THANKS TODO
 %attr(755,root,root) %{_bindir}/*
-%{_datadir}/%{name}
+%attr(755,root,root) %{_sbindir}/*
+%{_mandir}/man?/*
+%{_sysconfdir}
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
