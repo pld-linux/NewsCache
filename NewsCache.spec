@@ -55,10 +55,10 @@ Requires:	%{name} = %{version}-%{release}
 Obsoletes:	%{name}-inetd
 
 %description standalone
-Run NewsCache in the Standalone mode
+Run NewsCache in the standalone mode.
 
 %description standalone -l pl
-Uruchamia NewsCache w trybie Standalone
+Uruchamia NewsCache w trybie samodzielnym.
 
 %package inetd
 Summary:	NewsCache inetd mode
@@ -118,7 +118,7 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man?/*
-%attr(755,news,news) %dir	/var/cache/newscache
+%config(noreplace) %verify(not size mtime md5) %attr(755,news,news) %dir /var/cache/newscache
 %dir %{_sysconfdir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
 
