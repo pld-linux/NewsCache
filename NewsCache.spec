@@ -10,20 +10,14 @@ Group:		-
 #Vendor:		-
 #Icon:		-
 Source0:	http://www.hstraub.at/linux/downloads/src/%{name}-%{version}.tar.gz 
-# Source0-md5:	-
-#Source1:	%{name}
-# Source1-md5:	-
-#Patch0:		%{name}%{name}what.patch
-#URL:		-
-#BuildRequires:	-
-#PreReq:		-
-#Requires(pre,post):	-
-#Requires(preun):	-
-#Requires(postun):	-
-#Requires:	-
-#Provides:	-
-#Obsoletes:	-
-#Conflicts:	-
+# Source0-md5:	8cd84c15429fbf70b9f24ab877387ab3
+URL:		http://members.aon.at/hstraub/linux/newscache
+BuildRequires:	socket++-devel
+Requires:	socket++
+Provides:	nntpserver
+#Obsoletes:  leafnode+
+#Obsoletes:	leafnode
+#Conflicts:  inn
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -38,24 +32,13 @@ NewsCache to wolnodostêpny serwer keszuj±cy dla sieci USENET. NewsCache
 jest widziany jako serwer nntp, ale przechowuje tylko te artyku³y o które choæ jeden klient poprosi³.
 NewsCache rozwi±zuje problemy takie jak zajmowanie pasma czy obci±¿enie IO... (NYF!!!)
 
-#%package subpackage
-#Summary:	-
-#Summary(pl):	-
-#Group:		-
-######		Unknown group!
-
-#%description subpackage
-
-#%description subpackage -l pl
-
 %prep
 %setup -q -n %{name}-%{version}
 #%patch0 -p1
 
 %build
-# if ac/am/* rebuilding is necessary, do it in this order and add
-# appropriate BuildRequires
 %{__gettextize}
+#%{__libtoolize} (?)
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
@@ -87,8 +70,3 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS CREDITS ChangeLog NEWS README THANKS TODO
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/%{name}
-
-#%files subpackage
-#%defattr(644,root,root,755)
-#%doc extras/*.gz
-#%{_datadir}/%{name}-ext
