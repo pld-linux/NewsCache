@@ -21,15 +21,15 @@ Patch1:		http://download.cmeerw.net/debian/newscache/source/newscache_1.1.92-0cm
 URL:		http://members.aon.at/hstraub/linux/newscache
 BuildRequires:	socket++-devel
 BuildRequires:	libwrap-devel
+#Requires(pre):	/bin/id
+#Requires(pre):	/usr/bin/getgid
+#Requires(pre):	/usr/sbin/groupadd
+#Requires(pre):	/usr/sbin/useradd
+#Requires(postun):	/usr/sbin/userdel
+#Requires(postun):	/usr/sbin/groupdel
+#Requires(post,preun):	/sbin/chkconfig
+#Requires(post,postun):	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-Requires(pre):  /bin/id
-Requires(pre):  /usr/bin/getgid
-Requires(pre):  /usr/sbin/groupadd
-Requires(pre):  /usr/sbin/useradd
-Requires(postun):   /usr/sbin/userdel
-Requires(postun):   /usr/sbin/groupdel
-Requires(post,preun):   /sbin/chkconfig
-Requires(post,postun):  /sbin/ldconfig
 
 %define		_sysconfdir	/etc/%{name}
 
@@ -103,13 +103,14 @@ mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth-dist $RPM_BUILD_ROOT%{_syscon
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre
-if [ "`getgid news`" ]; then
-    /usr/sbin/groupadd -g 13 -r -f news
-fi
-if [ "`id -u news 2>/dev/null`" ]; then
-	/usr/sbin/useradd -u 9 -r -d /var/spool/news -s /bin/false -c "NEWS User" -g news news 1>&2
-fi
+# setup provides this user/group
+#%%pre
+#if [ "`getgid news`" ]; then
+#	/usr/sbin/groupadd -g 13 -r -f news
+#fi
+#if [ "`id -u news 2>/dev/null`" ]; then
+#	/usr/sbin/useradd -u 9 -r -d /var/spool/news -s /bin/false -c "NEWS User" -g news news 1>&2
+#fi
 
 %files
 %defattr(644,root,root,755)
