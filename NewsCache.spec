@@ -1,3 +1,7 @@
+# TODO:	review i and tests (especially .inet), %%post, %%preun,
+#	%%postun scripts for NewsCache-{standalone,inet}, fix 
+#	subpackages group descriptions.
+#
 Summary:	News Cache
 Summary(pl):	nisza dla newsów
 Name:		NewsCache
@@ -7,7 +11,8 @@ Epoch:		0
 License:	GPL
 Group:		Applications/News
 Source0:	http://www.hstraub.at/linux/downloads/src/%{name}-%{version}.tar.gz
-Source1:	%{name}-init
+Source1:	%{name}.init
+Source2:	%{name}.inet
 # Source0-md5:	8cd84c15429fbf70b9f24ab877387ab3
 Patch0:		%{name}-ac_no_debug_flag_hack.patch
 # http://cmeerw.org/debian/
@@ -39,7 +44,7 @@ Summary:	NewsCache standalone mode
 Summary(pl):	NewsCache w trybie samodzielnym
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Conflicts:	%{name}-inetd
+Obsoletes:	%{name}-inetd
 
 %description standalone
 Run NewsCache in the Standalone mode
@@ -53,13 +58,13 @@ Summary(pl):	NewsCache w trybie inetd
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-inetd
-Conflicts:	%{name}-inetd
+Obsoletes:	%{name}-standalone
 
 %description inetd
 Run NewsCache from the inetd.
 
 %description inetd -l pl
-Uruchamia NewsCache pod konrol± inetd
+Uruchamia NewsCache pod konrol± inetd.
 
 %prep
 %setup -q
@@ -73,18 +78,19 @@ Uruchamia NewsCache pod konrol± inetd
 %{__autoheader}
 %{__automake}
 %configure	\
---enable-notcached
+	--enable-notcached
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-DESTDIR=$RPM_BUILD_ROOT
-install -d	$RPM_BUILD_ROOT{/var/cache/newscache/,{%_sysconfdir},/etc/rc.d/init.d/}
+	DESTDIR=$RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{/var/cache/newscache,{%_sysconfdir},/etc/{rc.d/init.d,sysconfig/rc-inetd}}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/newscache
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/newscache
 mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf
-mv -f  $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -92,19 +98,18 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README THANKS TODO
-%doc %{_datadir}/info/NewsCache.info.gz
+%doc %{_infodir}/*
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man?/*
-%dir %{_sysconfdir}
 %attr(755,news,news) %dir	/var/cache/newscache
-%attr(644,news,news) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
+%dir %{_sysconfdir}
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
 
 %files inetd
 %defattr(644,root,root,755)
+%attr(640,root,root) /etc/sysconfig/rc-inetd/newscache
 
 %files standalone
 %defattr(644,root,root,755)
 %attr(754,root,root) /etc/rc.d/init.d/newscache
-%{_infodir}/*
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
