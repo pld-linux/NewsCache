@@ -105,6 +105,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files standalone
 %defattr(644,root,root,755)
-/etc/rc.d/init.d/newscache
+%attr(754,root,root) /etc/rc.d/init.d/newscache
 %{_infodir}/*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
