@@ -46,6 +46,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf
+mv -f  $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,5 +58,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man?/*
+%{_infodir}/*
 %{_sysconfdir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
