@@ -45,7 +45,7 @@ bandwidth consumption or the IO load caused by news clients.
 %description -l pl
 NewsCache to wolnodostêpny serwer keszuj±cy dla sieci USENET.
 NewsCache jest widziany jako serwer nntp, ale przechowuje tylko te
-artyku³y o które czya³ choæ jeden klient. NewsCache rozwi±zuje
+artyku³y, o które pyta³ choæ jeden klient. NewsCache rozwi±zuje
 problemy takie jak zajmowanie pasma czy obci±¿enie systemu We/Wy
 spowodowane obs³ug± klientów news.
 
