@@ -19,6 +19,8 @@ Patch0:		%{name}-ac_no_debug_flag_hack.patch
 # http://download.cmeerw.net/debian/newscache/source/newscache_1.1.92-0cmeerw.diff.gz
 Patch1:		http://download.cmeerw.net/debian/newscache/source/newscache_1.1.92-0cmeerw.diff.gz
 URL:		http://members.aon.at/hstraub/linux/newscache
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	socket++-devel
 BuildRequires:	libwrap-devel
 #Requires(pre):	/bin/id
