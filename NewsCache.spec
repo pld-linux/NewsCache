@@ -23,6 +23,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	socket++-devel
 BuildRequires:	libwrap-devel
+#BuildRequires:	rpmbuild(macros) >= 1.202
 #Requires(pre):	/bin/id
 #Requires(pre):	/usr/bin/getgid
 #Requires(pre):	/usr/sbin/groupadd
@@ -108,10 +109,10 @@ rm -rf $RPM_BUILD_ROOT
 # setup provides this user/group
 #%%pre
 #if [ "`getgid news`" ]; then
-#	/usr/sbin/groupadd -g 13 -r -f news
+#	%groupadd -g 13 -r -f news
 #fi
 #if [ "`id -u news 2>/dev/null`" ]; then
-#	/usr/sbin/useradd -u 9 -r -d /var/spool/news -s /bin/false -c "NEWS User" -g news news 1>&2
+#	%useradd -u 9 -r -d /var/spool/news -s /bin/false -c "NEWS User" -g news news
 #fi
 
 %files
