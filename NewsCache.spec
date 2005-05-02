@@ -1,5 +1,5 @@
 # TODO:	review i and tests (especially .inet), %%post, %%preun,
-#	%%postun scripts for NewsCache-{standalone,inet}, fix 
+#	%%postun scripts for NewsCache-{standalone,inet}, fix
 #	subpackages group descriptions.
 #
 Summary:	News Cache
@@ -122,9 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man?/*
-%config(noreplace) %verify(not size mtime md5) %attr(755,news,news) %dir /var/cache/newscache
+%config(noreplace) %verify(not md5 mtime size) %attr(755,news,news) %dir /var/cache/newscache
 %dir %{_sysconfdir}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
 %files inetd
 %defattr(644,root,root,755)
