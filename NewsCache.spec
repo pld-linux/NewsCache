@@ -1,37 +1,30 @@
-# TODO:	review i and tests (especially .inet), %%post, %%preun,
-#	%%postun scripts for NewsCache-{standalone,inet}, fix
-#	subpackages group descriptions.
+# TODO:	- review i and tests (especially .inet).
+#	- review permissions for newscache.auth
 #
+%define		_rc	rc6
+%define		_rel	0.1
 Summary:	News Cache
 Summary(pl):	nisza dla newsów
 Name:		NewsCache
-Version:	1.1.92
-Release:	1
+Version:	1.2
+Release:	0.%{_rc}.%{_rel}
 Epoch:		0
 License:	GPL
 Group:		Applications/News
-Source0:	http://www.hstraub.at/linux/downloads/src/%{name}-%{version}.tar.gz
+Source0:	http://www.linuxhacker.at/linux/downloads/src/%{name}-%{version}%{_rc}.tar.gz
+# Source0-md5:	a7b33314cd7701564b4947ab8615dcc2
 Source1:	%{name}.init
 Source2:	%{name}.inet
-# Source0-md5:	8cd84c15429fbf70b9f24ab877387ab3
-Patch0:		%{name}-ac_no_debug_flag_hack.patch
-# http://cmeerw.org/debian/
-# http://download.cmeerw.net/debian/newscache/source/newscache_1.1.92-0cmeerw.diff.gz
-Patch1:		http://download.cmeerw.net/debian/newscache/source/newscache_1.1.92-0cmeerw.diff.gz
-URL:		http://members.aon.at/hstraub/linux/newscache
+# http://www.linuxhacker.at/linux/downloads/src/NewsCache-1.2rc6-patch1.gz
+Patch0:		%{name}-1.2rc6_maintainer.patch
+Patch1:		%{name}-config.patch
+URL:		http://www.linuxhacker.at/newscache/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	socket++-devel
 BuildRequires:	libwrap-devel
-#BuildRequires:	rpmbuild(macros) >= 1.202
-#Requires(pre):	/bin/id
-#Requires(pre):	/usr/bin/getgid
-#Requires(pre):	/usr/sbin/groupadd
-#Requires(pre):	/usr/sbin/useradd
-#Requires(postun):	/usr/sbin/userdel
-#Requires(postun):	/usr/sbin/groupdel
-#Requires(post,preun):	/sbin/chkconfig
-#Requires(post,postun):	/sbin/ldconfig
+Requires(post,preun):	/sbin/chkconfig
+Requires:	rpmbuild(macros) >= 1.208
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
@@ -53,7 +46,8 @@ spowodowane obs³ug± klientów news.
 %package standalone
 Summary:	NewsCache standalone mode
 Summary(pl):	NewsCache w trybie samodzielnym
-Group:		Development/Libraries
+Group:		Applications/News
+PreReq:         rc-scripts
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	%{name}-inetd
 
@@ -66,7 +60,7 @@ Uruchamia NewsCache w trybie samodzielnym.
 %package inetd
 Summary:	NewsCache inetd mode
 Summary(pl):	NewsCache w trybie inetd
-Group:		Development/Libraries
+Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-inetd
 Obsoletes:	%{name}-standalone
@@ -78,42 +72,88 @@ Run NewsCache from the inetd.
 Uruchamia NewsCache pod konrol± inetd.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p0
-#%patch1 -p1
+%patch1 -p1
 
 %build
-%define specflags '-O0'
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure	\
-	--enable-notcached
+%configure
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT/var/cache/newscache
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/var/cache/newscache,{%_sysconfdir},/etc/{rc.d/init.d,sysconfig/rc-inetd}}
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/newscache
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/newscache
-mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf
-mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth-dist $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth
+
+install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/newscache
+install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/newscache
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.auth{-dist,}
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/newscache.conf{-dist,}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# setup provides this user/group
-#%%pre
-#if [ "`getgid news`" ]; then
-#	%groupadd -g 13 -r -f news
-#fi
-#if [ "`id -u news 2>/dev/null`" ]; then
-#	%useradd -u 9 -r -d /var/spool/news -s /bin/false -c "NEWS User" -g news news
-#fi
+%pre
+%groupadd -g 152 newscache
+%useradd -u 152 -d /var/cache/newscache -s /bin/false -c "NewsCache User" -g newscache newscache
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove newscache
+	%groupremove newscache
+fi
+
+%triggerun -- %{name} < 1.2
+if [ "$1" = "2" -a "$2" = "1" ] ; then
+# Don't use #%%banner file -a - messages are displayed twice or more
+echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%{name} works now with newscache user and group - making:
+1. appropriate changes in your %{_sysconfdir}/newscache.conf ...'
+
+%{__sed} -i -e 's@\(Username\)\s\+news@\1 newscache@' %{_sysconfdir}/newscache.conf
+%{__sed} -i -e 's@\(Groupname\)\s\+news@\1 newscache@' %{_sysconfdir}/newscache.conf
+
+echo '2. setting new, correct owner and group for /var/cache/newscache ...'
+
+%{__chown} -R newscache:newscache /var/cache/newscache
+
+echo 'Done.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+fi
+
+%post standalone
+/sbin/chkconfig --add newscache
+if [ -f /var/lock/subsys/newscache ]; then
+	/etc/rc.d/init.d/newscache restart 1>&2
+else
+	echo "Run \"/etc/rc.d/init.d/newscache start\" to start NewsCache daemon."
+fi
+
+%preun standalone
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/newscache ]; then
+		/etc/rc.d/init.d/newscache stop 1>&2
+	fi
+	/sbin/chkconfig --del newscache
+fi
+
+%post inetd
+if [ -f /var/lock/subsys/rc-inetd ]; then
+	/etc/rc.d/init.d/rc-inetd restart 1>&2
+else
+	echo "Type \"/etc/rc.d/init.d/rc-inetd start\" to start NewsCache from inet server" 1>&2
+fi
+
+%postun inetd
+if [ "$1" = "0" -a -f /var/lock/subsys/rc-inetd ]; then
+	/etc/rc.d/init.d/rc-inetd reload 1>&2
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -122,9 +162,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man?/*
-%config(noreplace) %verify(not md5 mtime size) %attr(755,news,news) %dir /var/cache/newscache
+%dir %attr(755,newscache,newscache) /var/cache/newscache
 %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
+# ... or review permissions (newscache.auth contain passwords) & effects:
+#%%attr(640,root,news) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/newscache.auth
+#%%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/newscache.conf
 
 %files inetd
 %defattr(644,root,root,755)
