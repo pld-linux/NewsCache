@@ -1,10 +1,14 @@
 #!/bin/sh
 #
-# newscache		Proxy DNS Daemon
+# newscache	newscache - news caching daemon 
 #
-# chkconfig:	345 90 10
+# chkconfig:	345 90 10	
 #
-# description:	Proxy DNS Daemon
+# description:	NewsCache acts to news reading clients like a news server,\
+#		except that it stores only those articles that have been\
+#		requested by at least one client. NewsCache targets problems\
+#		of the current News System like network bandwidth consumption\
+#		or the IO load caused by news clients.
 #
 
 # Source function library
@@ -13,43 +17,46 @@
 # Get network config
 . /etc/sysconfig/network
 
-# Default parameters
-
 # Get service config - may override defaults
 [ -f /etc/sysconfig/newscache ] && . /etc/sysconfig/newscache
 
 # Check that networking is up.
 if is_yes "${NETWORKING}"; then
-	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
-		msg_network_down NewsCache
+	if [ ! -f /var/lock/subsys/network ]; then
+		# nls "ERROR: Networking is down. %s can't be run." newscache
+		msg_network_down newscache
 		exit 1
 	fi
 else
 	exit 0
 fi
 
-test -x /usr/sbin/newscache || exit 0
 
-RETVAL=0
+# See how we were called.
 case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/newscache ]; then
-		msg_starting NewsCache
-		daemon newscache 
+		# show "Starting %s service" newscache
+		msg_starting newscache
+		daemon newscache
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/newscache
 	else
-		msg_already_running NewsCache
+		# show "%s service is already running." newscache
+		msg_already_running newscache
 	fi
 	;;
   stop)
 	if [ -f /var/lock/subsys/newscache ]; then
-		msg_stopping NewsCache
+		# Stop daemons.
+		# show "Stopping %s service" newscache
+		msg_stopping newscache
 		killproc newscache
-		rm -f /var/lock/subsys/newscache >/dev/null 2>&1
+		rm -f /var/lock/subsys/newscache
 	else
-		msg_not_running NewsCache
+		# show "%s service is not running." newscache
+		msg_not_running newscache
 	fi
 	;;
   restart)
@@ -57,14 +64,38 @@ case "$1" in
 	$0 start
 	exit $?
 	;;
-  status)
-	status newscached
+  reload)
+	if [ -f /var/lock/subsys/newscache ]; then
+		# show "Reload %s service" newscache
+		msg_reloading newscache
+		killproc newscache -HUP
+		RETVAL=$?
+	else
+		# show "%s service is not running." newscache
+		msg_not_running newscache >&2
+		RETVAL=7
+	fi
+	;;
+  force-reload)
+	# if program allows reloading without stopping
+	$0 reload
+
+	# or if it doesn't
+	$0 restart
+
 	exit $?
 	;;
+  status)
+	status newscache
+	RETVAL=$?
+	;;
   *)
-	# show "Usage: %s {start|stop|restart|restart}"
-	msg_usage "$0 {start|stop|restart|restart}"
+	# show "Usage: %s {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 3
 esac
 
 exit $RETVAL
+
+# This must be last line !
+# vi:syntax=sh:tw=78:ts=8:sw=4
