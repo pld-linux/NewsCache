@@ -1,0 +1,17 @@
+- up to 1.2rc6
+- fixed .init - rewritten, proper description
+- fixed .inet - typo (not tested)
+- updated URL, Source0 URL
+- added -1.2rc6_maintainer.patch - by maintainer:
+  "This patch fixing a configuration error: --prefix without --sysconfdir
+  option."
+- added -config.patch - works out of box with localhost and news.tpi.pl,
+  private author's entries commented out
+- proper group for subpackages: Applications/News
+- %install, %files simplification
+- %pre/%preun/%postun scripts for -standalone and inetd subpackages
+- now works with newscache user and group (I consider that every daemon
+  should be running from own user for security reasons) - appropriate
+  trigger provided: sets newscache:newscache for /var/cache/newscache,
+  updates Username and Groupname in /etc/NeswCache/newscache.conf
+- cleaning
