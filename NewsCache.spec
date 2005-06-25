@@ -18,6 +18,7 @@ Source2:	%{name}.inet
 # http://www.linuxhacker.at/linux/downloads/src/NewsCache-1.2rc6-patch1.gz
 Patch0:		%{name}-1.2rc6_maintainer.patch
 Patch1:		%{name}-config.patch
+Patch2:		%{name}-info.patch
 URL:		http://www.linuxhacker.at/newscache/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -75,6 +76,7 @@ Uruchamia NewsCache pod konrol± inetd.
 %setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__aclocal}
