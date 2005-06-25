@@ -1,0 +1,155 @@
+--- newscache-1.1.92.orig/doc/NewsCache.info
++++ newscache-1.1.92/doc/NewsCache.info
+@@ -1,5 +1,5 @@
+-This is Info file NewsCache.info, produced by Makeinfo version 1.68
+-from the input file NewsCache.texinfo.
++This is NewsCache.info, produced by makeinfo version 4.1 from
++NewsCache.texinfo.
+ 
+    This is the NewsCache Reference Manual.
+ 
+@@ -109,7 +109,7 @@
+    Some news readers mark deleted articles as read. However, if the
+ article is reinstated on the news server, the article is still marked
+ as read and the user will never see this article as unread.  According
+-to RFC977, (Network News Transfer Protocol) (http://info.internet.isi.edu/in-notes/rfc/files/rfc977.txt) it is allowed that deleted articles
++to (Network News Transfer Protocol) it is allowed that deleted articles
+ are reinstated. This is also documented in the new NNTP-draft which
+ should be published as RFC within the next months.
+ 
+@@ -204,8 +204,8 @@
+      Admin you@your.provider
+ 
+    Timeouts for the retrieval of the active database and the description
+-(*In version 0.99.13, the retrieval of the newsgroup descriptions is
+-not implemented*) of the newsgroups are set with the `Timeouts' command
++(_In version 0.99.13, the retrieval of the newsgroup descriptions is
++not implemented_) of the newsgroups are set with the `Timeouts' command
+ (The values are given in seconds). The values indicate the time, when
+ NewsCache reloads the active database or the description of the
+ newsgroups. While the active database changes rather frequently, the
+@@ -231,11 +231,11 @@
+ crond. `NewsCacheClean' removes newsgroups until the used diskspace is
+ below `SpoolSize'.
+ 
+-   *Before starting NewsCache, check that this directory exists and
++   _Before starting NewsCache, check that this directory exists and
+ that NewsCache has read and write permissions. Additionally, this
+ directory must be on a local partition! NewsCache uses file locking and
+ does not make use of lockd. Mounting this directory via NFS would
+-decrease performance, so it does not make sense anyway.*
++decrease performance, so it does not make sense anyway._
+ 
+      SpoolDirectory /lhome/newscache/NSpool
+      SpoolSize 100000
+@@ -249,8 +249,8 @@
+ 
+    If you are using log files you have to set the log directory using
+ the `LogDirectory' command. If you are using syslogd, this statement
+-has no effect. *Before starting NewsCache, check that this directory
+-exists and that NewsCache has read and write permissions.*
++has no effect. _Before starting NewsCache, check that this directory
++exists and that NewsCache has read and write permissions._
+ 
+      LogDirectory /lhome/newscache/log
+ 
+@@ -259,8 +259,8 @@
+ both. NewsCache uses the same log format as INN and some additional log
+ entries. If you want to log only INN style log messages, add the
+ `strict-inn' option. This will be only useful if you use some statistic
+-tools for INN that get confused with those extra messages. *In version
+-0.99.13 `strict-inn' is only supported on the LOG_NOTICE level.*
++tools for INN that get confused with those extra messages. _In version
++0.99.13 `strict-inn' is only supported on the LOG_NOTICE level._
+ 
+      LogStyle ip-address strict-inn
+ 
+@@ -339,7 +339,7 @@
+      contact the upstream news server; `semioffline'--contact the
+      upstream news server whenever necessary, except for retrieving the
+      list of newsgroups; `not-setpostflag', `setpostflag';
+-     `not-cached', `cached'.
++     `not-cached', `cached'; `dontgenmsgid'; `lowbandwidth'.
+ 
+ `Commands'
+      This option indicates which commands are (or are not) supported by
+@@ -419,11 +419,11 @@
+ a good connection to our local news server. In fact they are located on
+ the same machine.
+ 
+-   *Whether the cached/not-cached flag is supported depends on your
++   _Whether the cached/not-cached flag is supported depends on your
+ installation. If you configured NewsCache at compile time with the
+ `--enable-notcached' flag this flag is supported, otherwise not. This
+ is disabled by default due to problems of gcc-2.7.2.  If you are using
+-egcs or gcc-2.8.1, you can turn on this flag safely.*
++egcs or gcc-2.8.1, you can turn on this flag safely._
+ 
+ Replacing a Leaf Node News Server
+ =================================
+@@ -564,7 +564,7 @@
+ active database will be requested twice from news.tuwien.ac.at. In our
+ case for all newsgroups, with all the at.tuwien.* groups eliminated and
+ once for all the at.tuwien.* groups. If the news server does not support
+-the `list active [wildmat]' command, the *whole* active database will
++the `list active [wildmat]' command, the _whole_ active database will
+ be requested twice.  While this does not matter for a news server with
+ a good connection to the cache, you will think twice reconsider your
+ choice if the connection is not that good.
+@@ -661,13 +661,13 @@
+ **************************
+ 
+ Where can I get NewsCache?
+-     You can can get NewsCache from its
+-     homepage (http://www.infosys.tuwien.ac.at/NewsCache/).
++     You can can get NewsCache from its homepage
++     (http://www.infosys.tuwien.ac.at/NewsCache/).
+ 
+ What is the latest version of NewsCache?
+      As of this writing the latest version is 0.99.13. The latest
+-     version of NewsCache can always be found at its
+-     homepage (http://www.infosys.tuwien.ac.at/NewsCache/).
++     version of NewsCache can always be found at its homepage
++     (http://www.infosys.tuwien.ac.at/NewsCache/).
+ 
+ How does this compare to NNTPCACHE?
+      NNTPCACHE is a cache server similar to NewsCache. Features of
+@@ -807,16 +807,16 @@
+ 
+ 
+ Tag Table:
+-Node: Top939
+-Node: Introduction1929
+-Node: Compatibility3686
+-Node: General Options5941
+-Node: ServerList Option12020
+-Node: Access Control24092
+-Node: Statistics24900
+-Node: Bugs and Misfeatures25318
+-Node: FAQ26509
+-Node: Inside NewsCache29572
+-Node: Concept Index30467
++Node: Top913
++Node: Introduction1903
++Node: Compatibility3660
++Node: General Options5846
++Node: ServerList Option11925
++Node: Access Control24029
++Node: Statistics24837
++Node: Bugs and Misfeatures25255
++Node: FAQ26446
++Node: Inside NewsCache29509
++Node: Concept Index30404
+ 
+ End Tag Table
+--- newscache-1.1.92.orig/doc/NewsCache.texinfo
++++ newscache-1.1.92/doc/NewsCache.texinfo
+@@ -452,7 +452,7 @@
+ contact the upstream news server; @code{semioffline}---contact the
+ upstream news server whenever necessary, except for retrieving the list
+ of newsgroups; @code{not-setpostflag}, @code{setpostflag};
+-@code{not-cached}, @code{cached}.
++@code{not-cached}, @code{cached}; @code{dontgenmsgid}; @code{lowbandwidth}.
+ @item Commands
+ This option indicates which commands are (or are not) supported by the
+ upstream news server. Some versions of the netscape collabra server do
