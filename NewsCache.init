@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# newscache	newscache - news caching daemon 
+# newscache	newscache - news caching daemon
 #
-# chkconfig:	345 90 10	
+# chkconfig:	345 90 10
 #
 # description:	NewsCache acts to news reading clients like a news server,\
 #		except that it stores only those articles that have been\
