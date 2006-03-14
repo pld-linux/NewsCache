@@ -22,10 +22,10 @@ Patch2:		%{name}-info.patch
 URL:		http://www.linuxhacker.at/newscache/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	socket++-devel
 BuildRequires:	libwrap-devel
+BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	socket++-devel
 Requires(post,preun):	/sbin/chkconfig
-Requires:	rpmbuild(macros) >= 1.208
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
@@ -48,9 +48,9 @@ spowodowane obs³ug± klientów news.
 Summary:	NewsCache standalone mode
 Summary(pl):	NewsCache w trybie samodzielnym
 Group:		Applications/News
-PreReq:         rc-scripts
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-inetd
+Requires:	rc-scripts
+Obsoletes:	NewsCache-inetd
 
 %description standalone
 Run NewsCache in the standalone mode.
@@ -64,7 +64,7 @@ Summary(pl):	NewsCache w trybie inetd
 Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-inetd
-Obsoletes:	%{name}-standalone
+Obsoletes:	NewsCache-standalone
 
 %description inetd
 Run NewsCache from the inetd.
@@ -112,8 +112,7 @@ if [ "$1" = "0" ]; then
 fi
 
 %triggerun -- %{name} < 1.2
-if [ "$1" = "2" -a "$2" = "1" ] ; then
-# Don't use #%%banner file -a - messages are displayed twice or more
+if [ "$1" -ge "2" -a "$2" = "1" ] ; then
 echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %{name} works now with newscache user and group - making:
 1. appropriate changes in your %{_sysconfdir}/newscache.conf ...'
@@ -131,30 +130,20 @@ fi
 
 %post standalone
 /sbin/chkconfig --add newscache
-if [ -f /var/lock/subsys/newscache ]; then
-	/etc/rc.d/init.d/newscache restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/newscache start\" to start NewsCache daemon."
-fi
+%service newscache restart "NewsCache daemon"
 
 %preun standalone
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/newscache ]; then
-		/etc/rc.d/init.d/newscache stop 1>&2
-	fi
+	%service newscache stop
 	/sbin/chkconfig --del newscache
 fi
 
 %post inetd
-if [ -f /var/lock/subsys/rc-inetd ]; then
-	/etc/rc.d/init.d/rc-inetd restart 1>&2
-else
-	echo "Type \"/etc/rc.d/init.d/rc-inetd start\" to start NewsCache from inet server" 1>&2
-fi
+%service -q rc-inetd reload
 
 %postun inetd
-if [ "$1" = "0" -a -f /var/lock/subsys/rc-inetd ]; then
-	/etc/rc.d/init.d/rc-inetd reload 1>&2
+if [ "$1" = "0" ]; then
+	%service -q rc-inetd reload
 fi
 
 %files
