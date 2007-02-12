@@ -4,7 +4,7 @@
 %define		_rc	rc6
 %define		_rel	0.1
 Summary:	News Cache
-Summary(pl.UTF-8):   nisza dla newsów
+Summary(pl.UTF-8):	nisza dla newsów
 Name:		NewsCache
 Version:	1.2
 Release:	0.%{_rc}.%{_rel}
@@ -46,7 +46,7 @@ spowodowane obsługą klientów news.
 
 %package standalone
 Summary:	NewsCache standalone mode
-Summary(pl.UTF-8):   NewsCache w trybie samodzielnym
+Summary(pl.UTF-8):	NewsCache w trybie samodzielnym
 Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
@@ -60,7 +60,7 @@ Uruchamia NewsCache w trybie samodzielnym.
 
 %package inetd
 Summary:	NewsCache inetd mode
-Summary(pl.UTF-8):   NewsCache w trybie inetd
+Summary(pl.UTF-8):	NewsCache w trybie inetd
 Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-inetd
