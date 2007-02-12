@@ -4,7 +4,7 @@
 %define		_rc	rc6
 %define		_rel	0.1
 Summary:	News Cache
-Summary(pl):	nisza dla newsów
+Summary(pl.UTF-8):   nisza dla newsÃ³w
 Name:		NewsCache
 Version:	1.2
 Release:	0.%{_rc}.%{_rel}
@@ -37,16 +37,16 @@ those articles that have been requested by at least one client.
 NewsCache targets problems of the current News System like network
 bandwidth consumption or the IO load caused by news clients.
 
-%description -l pl
-NewsCache to wolnodostêpny serwer keszuj±cy dla sieci USENET.
+%description -l pl.UTF-8
+NewsCache to wolnodostÄ™pny serwer keszujÄ…cy dla sieci USENET.
 NewsCache jest widziany jako serwer nntp, ale przechowuje tylko te
-artyku³y, o które pyta³ choæ jeden klient. NewsCache rozwi±zuje
-problemy takie jak zajmowanie pasma czy obci±¿enie systemu We/Wy
-spowodowane obs³ug± klientów news.
+artykuÅ‚y, o ktÃ³re pytaÅ‚ choÄ‡ jeden klient. NewsCache rozwiÄ…zuje
+problemy takie jak zajmowanie pasma czy obciÄ…Å¼enie systemu We/Wy
+spowodowane obsÅ‚ugÄ… klientÃ³w news.
 
 %package standalone
 Summary:	NewsCache standalone mode
-Summary(pl):	NewsCache w trybie samodzielnym
+Summary(pl.UTF-8):   NewsCache w trybie samodzielnym
 Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
@@ -55,12 +55,12 @@ Obsoletes:	NewsCache-inetd
 %description standalone
 Run NewsCache in the standalone mode.
 
-%description standalone -l pl
+%description standalone -l pl.UTF-8
 Uruchamia NewsCache w trybie samodzielnym.
 
 %package inetd
 Summary:	NewsCache inetd mode
-Summary(pl):	NewsCache w trybie inetd
+Summary(pl.UTF-8):   NewsCache w trybie inetd
 Group:		Applications/News
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-inetd
@@ -69,8 +69,8 @@ Obsoletes:	NewsCache-standalone
 %description inetd
 Run NewsCache from the inetd.
 
-%description inetd -l pl
-Uruchamia NewsCache pod konrol± inetd.
+%description inetd -l pl.UTF-8
+Uruchamia NewsCache pod konrolÄ… inetd.
 
 %prep
 %setup -q -n %{name}-%{version}%{_rc}
